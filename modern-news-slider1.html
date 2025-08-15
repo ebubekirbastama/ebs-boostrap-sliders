@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Icon Slider</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial; display:flex; flex-direction:column; align-items:center; background:#f0f0f0; min-height:100vh; padding:20px; }
+
+.slider-wrapper {
+  width: 95%;
+  max-width: 900px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.slider { position: relative; width: 100%; aspect-ratio: 16/9; }
+
+.slide {
+  position: absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  opacity:0;
+  transition: opacity 1s ease-in-out;
+}
+
+.slide.active { opacity:1; z-index:2; }
+
+.shine {
+  position: absolute;
+  top:0; left:-50%;
+  width:50%;
+  height:100%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-20deg);
+  pointer-events:none;
+  animation: shine 1s ease-in-out;
+}
+@keyframes shine {
+  0% { left:-50%; }
+  100% { left:100%; }
+}
+
+.slide img { width:100%; height:100%; object-fit:cover; display:block; }
+
+.slide .slide-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 0;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+  text-align: left;
+  line-height: 1.3;
+  max-height: 60px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  transform-origin: left bottom;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+/* Hover efekt */
+.slide .slide-title:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255,255,255,0.7);
+  color: #ffeb3b;
+}
+
+/* Yeni modern nav butonlar */
+.nav {
+  position: absolute;
+  top:50%;
+  transform: translateY(-50%);
+  z-index:5;
+  cursor:pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  width:60px;
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,0.2);
+  border: 2px solid #00bfff;
+  border-radius: 30px;
+  backdrop-filter: blur(5px);
+}
+
+/* Slider hover ile görünür */
+.slider-wrapper:hover .nav { opacity:1; }
+
+/* Hover animasyonu */
+.nav:hover {
+  transform: translateY(-50%) scale(1.2);
+  box-shadow: 0 0 20px rgba(0,191,255,0.8);
+  background: rgba(0,0,0,0.4);
+  border-color: #ffeb3b;
+}
+
+.nav svg { width:28px; height:28px; fill:#fff; pointer-events:none; }
+
+.prev { left:10px; }
+.next { right:10px; }
+</style>
+</head>
+<body>
+
+<div class="slider-wrapper">
+  <div class="slider" id="slider"></div>
+
+  <button class="nav prev">
+    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+  </button>
+  <button class="nav next">
+    <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+  </button>
+</div>
+
+<script>
+const images = [
+  {src:"https://beykozunsesi.com.tr/uploads/images/202508/image_870x_689ddd3f372e8.webp", title:"Evde Bakım Yardımı ödemeleri 11 bin 702 liraya yükseltildi, 529 bin hak sahibinin hesabına yatırılmaya başlandı"},
+  {src:"https://beykozunsesi.com.tr/uploads/images/202508/image_870x_689ca979f1b58.webp", title:"Milli Eğitim Bakanlığı, özel proje okulları için yeni başvuru ve değerlendirme kılavuzunu yayımladı"},
+  {src:"https://beykozunsesi.com.tr/uploads/images/202508/image_870x_689ddd41587d9.webp", title:"Bakan Bayraktar: “Suriye’ye 2025’in İlk Çeyreğinde 900 Megavat Elektrik İhraç Edeceğiz”"},
+  {src:"https://beykozunsesi.com.tr/uploads/images/202508/image_870x_689d5c92d8068.webp", title:"Yalova Belediye Başkanı Mehmet Gürel, 17 Ağustos 1999 Marmara Depremi’nin 26. yıl dönümünde anma mesajı yayımladı"},
+];
+
+const slider = document.getElementById('slider');
+const prevBtn = document.querySelector('.prev');
+const nextBtn = document.querySelector('.next');
+let currentIndex = 0;
+
+// Slide'ları oluştur
+images.forEach(img => {
+  const slide = document.createElement('div');
+  slide.classList.add('slide');
+  
+  const image = document.createElement('img');
+  image.src = img.src;
+  slide.appendChild(image);
+  
+  const titleDiv = document.createElement('div');
+  titleDiv.classList.add('slide-title');
+  titleDiv.textContent = img.title;
+  slide.appendChild(titleDiv);
+
+  slider.appendChild(slide);
+});
+
+const slides = document.querySelectorAll('.slide');
+
+function showSlide(index){
+  slides.forEach(s=>s.classList.remove('active'));
+  const slide = slides[index];
+  slide.classList.add('active');
+
+  // Parlayan efekt
+  const shineDiv = document.createElement('div');
+  shineDiv.classList.add('shine');
+  slide.appendChild(shineDiv);
+  setTimeout(()=>{ slide.removeChild(shineDiv); }, 1000);
+}
+
+// Butonlar
+nextBtn.addEventListener('click', ()=>{
+  currentIndex = (currentIndex+1) % images.length;
+  showSlide(currentIndex);
+});
+prevBtn.addEventListener('click', ()=>{
+  currentIndex = (currentIndex-1 + images.length) % images.length;
+  showSlide(currentIndex);
+});
+
+// Otomatik geçiş
+setInterval(()=>{
+  currentIndex = (currentIndex+1) % images.length;
+  showSlide(currentIndex);
+}, 5000);
+
+// Başlangıç
+showSlide(currentIndex);
+</script>
+
+</body>
+</html>
