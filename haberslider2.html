@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haber Slider</title>
+<style>
+  body { margin: 0; font-family: Arial, sans-serif; background: #f5f5f5; }
+  .slider-container { position: relative; max-width: 1000px; margin: 20px auto; overflow: hidden; border-radius: 10px; }
+  .slides { display: flex; transition: transform 0.5s ease-in-out; }
+  .slide { min-width: 100%; position: relative; }
+  .slide img { width: 100%; display: block; height: 400px; object-fit: cover; }
+  .slide-content { position: absolute; bottom: 20px; left: 20px; color: white; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 5px; max-width: 70%; }
+  .slide-content h2 { margin: 0 0 5px; font-size: 24px; }
+  .slide-content p { margin: 0; font-size: 16px; }
+  
+  /* Navigation arrows */
+  .prev, .next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; font-size: 24px; padding: 10px; cursor: pointer; border-radius: 50%; }
+  .prev { left: 10px; }
+  .next { right: 10px; }
+
+  /* Thumbnails */
+  .thumbnails { display: flex; justify-content: center; margin-top: 10px; gap: 5px; }
+  .thumbnails img { width: 60px; height: 40px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 5px; }
+  .thumbnails img.active { border-color: #ff5722; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .slide-content { max-width: 90%; bottom: 10px; left: 10px; padding: 10px; }
+    .slide-content h2 { font-size: 18px; }
+    .slide-content p { font-size: 14px; }
+    .slide img { height: 250px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="slider-container">
+  <div class="slides">
+    <div class="slide">
+      <img src="https://beykozunsesi.com.tr/uploads/images/202508/image_870x_689ddd41587d9.webp" alt="Haber 1">
+      <div class="slide-content">
+        <h2>Haber Başlığı 1</h2>
+        <p>Ülke genelinde önemli gelişmeler yaşanıyor. Detaylar için haberi okuyun.</p>
+      </div>
+    </div>
+    <div class="slide">
+      <img src="https://images.unsplash.com/photo-1593642532973-d31b6557fa68?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8c2l0dSUyMG5ld3N8fHx8fDE2OTI2NTg1MjI&ixlib=rb-4.0.3&q=80&w=1000" alt="Haber 2">
+      <div class="slide-content">
+        <h2>Haber Başlığı 2</h2>
+        <p>Ekonomi ve teknoloji dünyasında çarpıcı gelişmeler öne çıkıyor.</p>
+      </div>
+    </div>
+    <div class="slide">
+      <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8bmF0dXJlJTIwbmV3c3xlbnwwfHx8fDE2OTI2NTg1MzQ&ixlib=rb-4.0.3&q=80&w=1000" alt="Haber 3">
+      <div class="slide-content">
+        <h2>Haber Başlığı 3</h2>
+        <p>Doğa ve çevre ile ilgili çarpıcı haberler tüm dünyada ilgi çekiyor.</p>
+      </div>
+    </div>
+  </div>
+
+  <button class="prev">&#10094;</button>
+  <button class="next">&#10095;</button>
+</div>
+
+<div class="thumbnails">
+  <img src="https://beykozunsesi.com.tr/uploads/images/202508/image_870x_689ddd41587d9.webp" class="active" data-index="0">
+  <img src="https://images.unsplash.com/photo-1593642532973-d31b6557fa68?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8c2l0dSUyMG5ld3N8fHx8fDE2OTI2NTg1MjI&ixlib=rb-4.0.3&q=80&w=1000" data-index="1">
+  <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8bmF0dXJlJTIwbmV3c3xlbnwwfHx8fDE2OTI2NTg1MzQ&ixlib=rb-4.0.3&q=80&w=1000" data-index="2">
+</div>
+
+<script>
+  const slides = document.querySelector('.slides');
+  const slideImages = document.querySelectorAll('.slide');
+  const prevBtn = document.querySelector('.prev');
+  const nextBtn = document.querySelector('.next');
+  const thumbnails = document.querySelectorAll('.thumbnails img');
+  let index = 0;
+  const total = slideImages.length;
+
+  function showSlide(i) {
+    index = (i + total) % total;
+    slides.style.transform = `translateX(-${index * 100}%)`;
+    thumbnails.forEach(t => t.classList.remove('active'));
+    thumbnails[index].classList.add('active');
+  }
+
+  prevBtn.addEventListener('click', () => showSlide(index - 1));
+  nextBtn.addEventListener('click', () => showSlide(index + 1));
+
+  thumbnails.forEach(thumb => {
+    thumb.addEventListener('click', () => showSlide(parseInt(thumb.dataset.index)));
+  });
+
+  // Otomatik kaydırma
+  setInterval(() => showSlide(index + 1), 5000);
+
+  // Dokunmatik kaydırma (mobil için)
+  let startX = 0;
+  slides.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+  slides.addEventListener('touchend', e => {
+    const endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) showSlide(index + 1);
+    if (endX - startX > 50) showSlide(index - 1);
+  });
+</script>
+
+</body>
+</html>
