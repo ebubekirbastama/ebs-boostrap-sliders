@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Haber Slider Neon Efekt</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --dot-size: 10px;
+      --neon-color: #00e5ff;
+      --neon-border: 3px;
+      --radius: 18px;
+    }
+
+    /* Nokta stilleri */
+    .carousel-indicators [data-bs-target] {
+      width: var(--dot-size);
+      height: var(--dot-size);
+      border-radius: 50%;
+      background-color: #adb5bd;
+      opacity: 1;
+      margin: 0 6px;
+    }
+    .carousel-indicators .active {
+      background-color: #0d6efd;
+    }
+
+    /* Alt yazı */
+    .slide-caption {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 1rem 1.25rem;
+      color: #fff;
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.65) 100%);
+    }
+
+    /* Neon efekt */
+    .carousel-item img {
+      border: 4px solid #0ff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
+      animation: neonSides 3s infinite alternate;
+    }
+    @keyframes neonSides {
+      0% {
+        box-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
+      }
+      50% {
+        box-shadow: 0 0 15px #ff0, 0 0 25px #ff0, 0 0 35px #ff0;
+      }
+      100% {
+        box-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
+      }
+    }
+
+    /* Ok butonları */
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,.45));
+    }
+
+    /* Responsive slider genişliği */
+    .slider-wrapper {
+      width: 100%;
+      max-width: 980px;
+    }
+
+    /* Resim kırpma */
+    .carousel-item img {
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <h1 class="h4 mb-3 text-center">Günün Manşetleri Neon</h1>
+    <div class="slider-wrapper mx-auto shadow rounded-4 overflow-hidden bg-dark">
+      <div id="haberSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3800" data-bs-wrap="true">
+        
+        <!-- Noktalar -->
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#haberSlider" data-bs-slide-to="0" class="active"></button>
+          <button type="button" data-bs-target="#haberSlider" data-bs-slide-to="1"></button>
+          <button type="button" data-bs-target="#haberSlider" data-bs-slide-to="2"></button>
+        </div>
+        
+        <!-- İçerik -->
+        <div class="carousel-inner">
+          
+          <div class="carousel-item active">
+            <div class="ratio ratio-16x9">
+              <img class="w-100 h-100" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1600&auto=format&fit=crop" alt="Haber 1">
+            </div>
+            <div class="slide-caption">
+              <h2 class="h5 mb-1">İstanbul'da Rüzgar Etkisini Artırıyor</h2>
+              <p class="mb-0 small text-white-50">Kent genelinde etkili olan rüzgar, ulaşımı etkiledi.</p>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="ratio ratio-16x9">
+              <img class="w-100 h-100" src="https://images.unsplash.com/photo-1496302662116-35cc4f36df92?q=80&w=1600&auto=format&fit=crop" alt="Haber 2">
+            </div>
+            <div class="slide-caption">
+              <h2 class="h5 mb-1">Teknoloji Zirvesi'nde Yerli Girişimler</h2>
+              <p class="mb-0 small text-white-50">Yerli girişimler zirvede buluştu.</p>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="ratio ratio-16x9">
+              <img class="w-100 h-100" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop" alt="Haber 3">
+            </div>
+            <div class="slide-caption">
+              <h2 class="h5 mb-1">Derbi Heyecanı</h2>
+              <p class="mb-0 small text-white-50">Takımlar son antrenmanlarını yaptı.</p>
+            </div>
+          </div>
+
+        </div>
+        
+        <!-- Oklar -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#haberSlider" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#haberSlider" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Dokunmatik kaydırma -->
+  <script>
+    (function(){
+      const sliderEl = document.querySelector('#haberSlider');
+      const inner = sliderEl.querySelector('.carousel-inner');
+      const carousel = new bootstrap.Carousel(sliderEl);
+      let startX = 0, isPointerDown = false;
+
+      const onPointerDown = (e) => {
+        isPointerDown = true;
+        startX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+      };
+      const onPointerUp = (e) => {
+        if(!isPointerDown) return;
+        const currentX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX) || 0;
+        const diff = currentX - startX;
+        const threshold = 40;
+        if (diff > threshold) {
+          carousel.prev();
+        } else if (diff < -threshold) {
+          carousel.next();
+        }
+        isPointerDown = false;
+      };
+
+      inner.addEventListener('pointerdown', onPointerDown, {passive: true});
+      inner.addEventListener('pointerup', onPointerUp, {passive: true});
+      inner.addEventListener('pointerleave', () => { isPointerDown = false; });
+      inner.addEventListener('touchstart', onPointerDown, {passive: true});
+      inner.addEventListener('touchend', onPointerUp, {passive: true});
+    })();
+  </script>
+</body>
+</html>
